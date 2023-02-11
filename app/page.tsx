@@ -4,6 +4,7 @@ import { Inter } from "@next/font/google"
 import styles from "./page.module.css"
 import { useRef, useState } from "react"
 import { Canvas, useFrame, ThreeElements } from "@react-three/fiber"
+import { Perf } from "r3f-perf"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -31,6 +32,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <Canvas>
+        <Perf />
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
         <Box position={[0, 0, 0]} />
