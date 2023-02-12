@@ -4,12 +4,12 @@ import { Inter } from "@next/font/google"
 import styles from "./page.module.css"
 import { useRef, useState } from "react"
 import { Canvas, useFrame, ThreeElements } from "@react-three/fiber"
-import {
-  OrthographicCamera,
-  PerformanceMonitor,
-  Stats,
-} from "@react-three/drei"
+import { OrthographicCamera } from "@react-three/drei"
 import { Perf } from "r3f-perf"
+// @ts-ignore
+import fragmentShader from "@/shaders/fshader.glsl"
+// @ts-ignore
+import vertexShader from "@/shaders/vshader.glsl"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -25,29 +25,9 @@ function Plane(props: ThreeElements["mesh"]) {
     u_color: { value: new THREE.Color(0x00ff00) },
   }
 
-  const vshader = `
-  varying vec2 v_uv;
+  const vshader = vertexShader
+  const fshader = fragmentShader
 
-  void main() {
-    v_uv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position * 0.5, 1.0);
-  }
-  `
-
-  const fshader = `
-  uniform vec2 u_mouse;
-  uniform vec2 u_resolution;
-  uniform vec3 u_color;
-  uniform float u_time;
-  
-  varying vec2 v_uv;
-  
-  void main() {
-    vec2 uv = gl_FragCoord.xy / u_resolution;
-    vec3 color = vec3(v_uv.x, v_uv.y, 0.0);
-    gl_FragColor = vec4(color, 1.0);
-  }
-  `
   useFrame((state, delta) => {
     uniforms.u_mouse.value.x = Math.abs(state.mouse.x * 10000)
     uniforms.u_mouse.value.y = Math.abs(state.mouse.y * 10000)
