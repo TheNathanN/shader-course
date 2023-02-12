@@ -35,9 +35,12 @@ function Plane(props: ThreeElements["mesh"]) {
   uniform vec2 u_mouse;
   uniform vec2 u_resolution;
   uniform vec3 u_color;
+  uniform float u_time;
   
   void main(){
-    vec3 color = vec3(u_mouse.x/u_resolution.x, 0.0, u_mouse.y/u_resolution.y);
+    // vec2 v = u_mouse/u_resolution;
+    // vec3 color = vec3(v.x, 0.0, v.y);
+    vec3 color = vec3((sin(u_time) + 1.0)/2.0, 0.0, (cos(u_time) + 1.0)/2.0);
     gl_FragColor = vec4(color, 1.0);
   }
   `
@@ -49,15 +52,12 @@ function Plane(props: ThreeElements["mesh"]) {
       uniforms.u_resolution.value.x = state.size.width
       uniforms.u_resolution.value.y = state.size.height
     }
-    console.log(
-      uniforms.u_mouse.value.x / uniforms.u_resolution.value.x,
-      uniforms.u_mouse.value.y / uniforms.u_resolution.value.y
-    )
+    // console.log(uniforms.u_time.value)
   })
 
   return (
     <mesh {...props} ref={ref}>
-      <planeGeometry args={[4, 4]} />
+      <planeGeometry args={[10, 10]} />
       <shaderMaterial
         uniforms={uniforms}
         vertexShader={vshader}
@@ -72,7 +72,6 @@ export default function Home() {
     <main className={styles.main}>
       <Canvas>
         <Perf />
-
         <OrthographicCamera args={[-1, 1, 1, -1, 0.1, 10]}>
           <Plane />
         </OrthographicCamera>
