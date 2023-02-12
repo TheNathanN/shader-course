@@ -26,7 +26,10 @@ function Plane(props: ThreeElements["mesh"]) {
   }
 
   const vshader = `
-  void main(){
+  varying vec2 v_uv;
+
+  void main() {
+    v_uv = uv;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position * 0.5, 1.0);
   }
   `
@@ -37,9 +40,11 @@ function Plane(props: ThreeElements["mesh"]) {
   uniform vec3 u_color;
   uniform float u_time;
   
-  void main(){
+  varying vec2 v_uv;
+  
+  void main() {
     vec2 uv = gl_FragCoord.xy / u_resolution;
-    vec3 color = mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 0.0, 1.0), uv.y);
+    vec3 color = vec3(v_uv.x, v_uv.y, 0.0);
     gl_FragColor = vec4(color, 1.0);
   }
   `
